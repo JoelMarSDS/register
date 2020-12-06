@@ -1,0 +1,174 @@
+
+[
+			User
+	{
+		"name": "Laura Sophia Aparecida",
+		"login": "sophiaaparecida",
+		"password": "oZwqLWN1QW",
+		"telephone": "9839189594",
+		"email": "laurasophiaaparecidateixeira_@fileno.com.br",
+		"profile": "a",
+		"status": "c"
+	},
+	{
+		"name": "Silvana Carolina Carla",
+		"login": "carolinacarla",
+		"password": "lhCsm5wLXr",
+		"telephone": "9525835438",
+		"email": "ssilvanacarolinacarlaassuncao@depotit.com.br",
+		"profile": "a",
+		"status": "c"
+	},
+	{
+		"name": "Josefa Brenda Laís",
+		"login": "brendalais",
+		"password": "RDKN2dcd6G",
+		"telephone": "6338804228",
+		"email": "josefabrendalaisfarias_@moderna.com.br",
+		"profile": "a",
+		"status": "c"
+	},
+	{
+		"name": "Ian Kauê Caldeira",
+		"login": "iankaue",
+		"password": "Cak63R7hKP",
+		"telephone": "8235417493",
+		"email": "iankauecaldeira-87@hpelzer.com.br",
+		"profile": "a",
+		"status": "c"
+	},
+	{
+		"name": "Giovanna Aline Vanessa",
+		"login": "vanessa",
+		"password": "msTxaewiwN",
+		"telephone": "5125153371",
+		"email": "ggiovannaalinevanessabernardes@vitacard.com.br",
+		"profile": "a",
+		"status": "c"
+	}
+
+			Client
+
+	{
+		"name": "Aurora Luzia Caldeira",
+		"cpf": "484.383.168-90",
+		"address": "Rua Doralice Moura",
+		"city": "Maceió",
+		"uf": "AL",
+		"cep": "57046115",
+		"telephone": "8236345098",
+		"email": "aauroraluziacaldeira@ssala.com.br"
+	},
+	{
+		"name": "Allana Priscila Bianca",
+		"cpf": "365.757.376-32",
+		"address": "Avenida Guanabara",
+		"city": "Ji-Paraná",
+		"uf": "RO",
+		"cep": "76908220",
+		"telephone": "6935402355",
+		"email": "allanapriscilabiancaramos..allanapriscilabiancaramos@me.com"
+	},
+	{
+		"name": "Fábio Caio Giovanni Freitas",
+		"cpf": "130.704.824-21",
+		"address": "Rua dos Tororós",
+		"city": "Natal",
+		"uf": "RN",
+		"cep": "59032550",
+		"telephone": "8427619138",
+		"email": "fabiocaiogiovannifreitas__fabiocaiogiovannifreitas@rogerstenis.com.br"
+	},
+	{
+		"name": "Luzia Luana Sophia Duarte",
+		"cpf": "301.881.025-23",
+		"address": "Rua DI-J",
+		"city": "Boa Vista",
+		"uf": "RR",
+		"cep": "69315242",
+		"telephone": "9528021515",
+		"email": "luzialuanasophiaduarte_@hotamail.com"
+	},
+	{
+		"name": "Fernanda Stella Marli",
+		"cpf": "277.337.050-37",
+		"address": "Rua João Pessoa",
+		"city": "Rondonópolis",
+		"uf": "MT",
+		"cep": "78717706",
+		"telephone": "6639619758",
+		"email": "fernandastellamarlicortereal-86@edpbr.com.br"
+	}
+]
+
+{
+	"description": "In tincidunt malesuada justo non molestie.",
+	"type":"",
+	"value":"",
+	"client":{
+		"id":"1"
+	}
+}
+
+{
+	"description": "In tincidunt malesuada justo non molestie.",
+	"type":"",
+	"value":"",
+	"client":{
+		"id":"2"
+	}
+}
+
+{
+	"description": "In tincidunt malesuada justo non molestie.",
+	"type":"",
+	"value":"",
+	"client":{
+		"id":"3"
+	}
+}
+
+{
+	"description": "In tincidunt malesuada justo non molestie.",
+	"type":"",
+	"value":"",
+	"client":{
+		"id":"4"
+	}
+}
+
+{
+	"description": "In tincidunt malesuada justo non molestie.",
+	"type":"",
+	"value":"",
+	"client":{
+		"id":"5"
+	}
+}
+
+{
+	"description": "In tincidunt malesuada justo non molestie.",
+	"type":"",
+	"value":"",
+	"client":{
+		"id":"1"
+	}
+}
+
+{
+	"description": "In tincidunt malesuada justo non molestie.",
+	"type":"",
+	"value":"",
+	"client":{
+		"id":"1"
+	}
+}
+
+{
+	"description": "In tincidunt malesuada justo non molestie.",
+	"type":"",
+	"value":"",
+	"client":{
+		"id":"5"
+	}
+}
