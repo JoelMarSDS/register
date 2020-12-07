@@ -1,11 +1,15 @@
 package com.cash.register.domain.service.serviceimpl;
 
 import com.cash.register.domain.entity.CashBook;
+import com.cash.register.domain.entity.Client;
 import com.cash.register.domain.repository.CashBookRepository;
+import com.cash.register.domain.repository.ClientRepository;
 import com.cash.register.domain.service.CashBookService;
 import com.cash.register.domain.service.ClientService;
 import com.cash.register.domain.settings.config.messageproperties.PropertiesSourceMessage;
+import com.cash.register.domain.settings.config.security.SecurityUsernamePassword;
 import com.cash.register.domain.settings.exceptions.BusinessException;
+import com.cash.register.domain.settings.exceptions.InvalidUserOrPasswordException;
 import com.cash.register.domain.settings.exceptions.UsersNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,12 +28,17 @@ public class CashBookServiceImpl implements CashBookService {
     private CashBookRepository cashBookRepository;
 
     @Autowired
-    private ClientService clientService;
+    private ClientRepository clientRepository;
+
+    @Autowired
+    private SecurityUsernamePassword securityUsernamePassword;
 
     @Override
-    public CashBook addCashBook(CashBook cashBook) {
-        System.out.println(cashBook);
-        var client = clientService.getClientById(cashBook.getClient().getId());
+    public CashBook addCashBook(CashBook cashBook, String name, String password) {
+
+        validationLogin(name, password);
+
+        var client = getClient(cashBook.getClient().getId());
 
         try {
             exceptionCashBook(cashBook);
@@ -48,11 +57,14 @@ public class CashBookServiceImpl implements CashBookService {
     }
 
     @Override
-    public CashBook updateCashBook(Long id, CashBook cashBook) {
+    public CashBook updateCashBook(Long id, CashBook cashBook, String name, String password) {
+
+        validationLogin(name, password);
+
         return cashBookRepository.findById(id)
                 .map(uc -> {
-
                     exceptionCashBook(cashBook);
+                    getClient(cashBook.getId());
 
                     uc.setDescription(cashBook.getDescription());
                     uc.setType(cashBook.getType());
@@ -69,7 +81,10 @@ public class CashBookServiceImpl implements CashBookService {
     }
 
     @Override
-    public CashBook getCashBookById(Long id) {
+    public CashBook getCashBookById(Long id, String name, String password) {
+
+        validationLogin(name, password);
+
         return cashBookRepository.findById(id)
                 .orElseThrow(
                         () -> new EntityNotFoundException(PropertiesSourceMessage
@@ -78,7 +93,9 @@ public class CashBookServiceImpl implements CashBookService {
     }
 
     @Override
-    public List<CashBook> getCashBookList() {
+    public List<CashBook> getCashBookList( String name, String password) {
+
+        validationLogin(name, password);
 
         var cashBookList = cashBookRepository.findAll();
         try {
@@ -93,7 +110,10 @@ public class CashBookServiceImpl implements CashBookService {
     }
 
     @Override
-    public List<CashBook> getCashBookFilter(Long id) {
+    public List<CashBook> getCashBookFilter(Long id, String name, String password) {
+
+        validationLogin(name, password);
+
         var cashBookList = cashBookRepository.findByClient(id);
         try {
             if (cashBookList.isEmpty()) {
@@ -108,7 +128,10 @@ public class CashBookServiceImpl implements CashBookService {
     }
 
     @Override
-    public CashBook deleteCashBookById(Long id) {
+    public CashBook deleteCashBookById(Long id, String name, String password) {
+
+        validationLogin(name, password);
+
         var cashBookDelete = cashBookRepository.findById(id)
                 .orElseThrow(
                         () -> new EntityNotFoundException(PropertiesSourceMessage
@@ -118,19 +141,30 @@ public class CashBookServiceImpl implements CashBookService {
         return cashBookDelete;
     }
 
+    private Client getClient(Long id){
+        return clientRepository.findById(id)
+                .orElseThrow(
+                        () ->  new BusinessException(PropertiesSourceMessage
+                                .getMessageSource("msg.client.not.found.error"))
+                );
+    }
+
     private void exceptionCashBook(CashBook cashBook) {
 
         String character;
-
-        var clientTemp = clientService.getClientById(cashBook.getClient().getId());
-        if (clientTemp == null) {
-            throw new BusinessException(PropertiesSourceMessage.getMessageSource("msg.client.not.found.error"));
-        }
 
         character = cashBook.getType().toString();
         character.toLowerCase();
         if (!character.equalsIgnoreCase("D") && !character.equalsIgnoreCase("C")) {
             throw new BusinessException(PropertiesSourceMessage.getMessageSource("msg.properties.type.error"));
+        }
+    }
+
+    private void validationLogin(String name, String password) {
+        if (!securityUsernamePassword.namePassword(name, password)) {
+            throw new InvalidUserOrPasswordException(
+                    PropertiesSourceMessage.getMessageSource("invalid.user")
+            );
         }
     }
 }

@@ -17,36 +17,36 @@ public class CashBookController {
     private CashBookService cashBookService;
 
     @PostMapping
-    public ResponseEntity<CashBook> addCashBook(@RequestBody CashBook cashBook) {
-        var cashBookSave = cashBookService.addCashBook(cashBook);
+    public ResponseEntity<CashBook> addCashBook(@RequestBody CashBook cashBook, @RequestHeader String name, @RequestHeader String password) {
+        var cashBookSave = cashBookService.addCashBook(cashBook, name, password);
         URI uri = URI.create("/user/" + cashBookSave.getId());
         return ResponseEntity.created(uri).body(cashBookSave);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CashBook> updateCashBook(@PathVariable Long id, @RequestBody CashBook cashBook) {
-        var updateCashBook = cashBookService.updateCashBook(id, cashBook);
+    public ResponseEntity<CashBook> updateCashBook(@PathVariable Long id, @RequestBody CashBook cashBook, @RequestHeader String name, @RequestHeader String password) {
+        var updateCashBook = cashBookService.updateCashBook(id, cashBook, name, password);
         return ResponseEntity.ok(cashBook);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CashBook> getCashBookById(@PathVariable Long id) {
-        return ResponseEntity.ok(cashBookService.getCashBookById(id));
+    public ResponseEntity<CashBook> getCashBookById(@PathVariable Long id, @RequestHeader String name, @RequestHeader String password) {
+        return ResponseEntity.ok(cashBookService.getCashBookById(id, name, password));
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<CashBook>> getCashBookList() {
-        return ResponseEntity.ok(cashBookService.getCashBookList());
+    public ResponseEntity<List<CashBook>> getCashBookList(@RequestHeader String name, @RequestHeader String password) {
+        return ResponseEntity.ok(cashBookService.getCashBookList(name, password));
     }
 
     @GetMapping("/filter")
-    public ResponseEntity<List<CashBook>> getCashBookFilter(@RequestParam Long id) {
+    public ResponseEntity<List<CashBook>> getCashBookFilter(@RequestParam Long id, @RequestHeader String name, @RequestHeader String password) {
 
-        return ResponseEntity.ok(cashBookService.getCashBookFilter(id));
+        return ResponseEntity.ok(cashBookService.getCashBookFilter(id, name, password));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CashBook> deleteCashBookById(@PathVariable Long id) {
-        return ResponseEntity.ok(cashBookService.deleteCashBookById(id));
+    public ResponseEntity<CashBook> deleteCashBookById(@PathVariable Long id, @RequestHeader String name, @RequestHeader String password) {
+        return ResponseEntity.ok(cashBookService.deleteCashBookById(id, name, password));
     }
 }

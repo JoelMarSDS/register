@@ -17,37 +17,41 @@ public class UserEmployeeController {
     private UserEmployeeService userEmployeeService;
 
     @PostMapping
-    public ResponseEntity<UserEmployee> addUserEmployee(@RequestBody UserEmployee userEmployee) {
-        var userEmployeeSave = userEmployeeService.addUserEmployee(userEmployee);
+    public ResponseEntity<UserEmployee> addUserEmployee(@RequestBody UserEmployee userEmployee,
+                                                        @RequestHeader String name, @RequestHeader String password) {
+        var userEmployeeSave = userEmployeeService.addUserEmployee(userEmployee, name, password);
         URI uri = URI.create("/useremployee/" + userEmployeeSave.getId());
         return ResponseEntity.created(uri).body(userEmployeeSave);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserEmployee> updateUserEmployee(@PathVariable Long id, @RequestBody UserEmployee userEmployee) {
-        var updateUserEmployee = userEmployeeService.updateUserEmployee(id, userEmployee);
+    public ResponseEntity<UserEmployee> updateUserEmployee(@PathVariable Long id, @RequestBody UserEmployee userEmployee,
+                                                           @RequestHeader String name, @RequestHeader String password) {
+        var updateUserEmployee = userEmployeeService.updateUserEmployee(id, userEmployee, name, password);
         return ResponseEntity.ok(updateUserEmployee);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserEmployee> getUserEmployeeById(@PathVariable Long id) {
-        return ResponseEntity.ok(userEmployeeService.getUserEmployeeById(id));
+    public ResponseEntity<UserEmployee> getUserEmployeeById(@PathVariable Long id,
+                                                            @RequestHeader String name, @RequestHeader String password) {
+        return ResponseEntity.ok(userEmployeeService.getUserEmployeeById(id, name, password));
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<UserEmployee>> getUserEmployeeList() {
-        return ResponseEntity.ok(userEmployeeService.getUserEmployeeList());
+    public ResponseEntity<List<UserEmployee>> getUserEmployeeList(@RequestHeader String name, @RequestHeader String password) {
+        return ResponseEntity.ok(userEmployeeService.getUserEmployeeList(name,password));
     }
 
     @GetMapping("/filter")
-    public ResponseEntity<List<UserEmployee>> getUserEmployeeFilter(@RequestParam String email,
-                                                    @RequestParam String name) {
+    public ResponseEntity<List<UserEmployee>> getUserEmployeeFilter(@RequestParam("name") String nameParam,
+                                                    @RequestParam String email, @RequestHeader String name, @RequestHeader String password) {
 
-        return ResponseEntity.ok(userEmployeeService.getUserEmployeeFilter(name, email));
+        return ResponseEntity.ok(userEmployeeService.getUserEmployeeFilter(nameParam, email, name, password));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<UserEmployee> deleteUserEmployeeById(@PathVariable Long id) {
-        return ResponseEntity.ok(userEmployeeService.deleteUserEmployeeById(id));
+    public ResponseEntity<UserEmployee> deleteUserEmployeeById(@PathVariable Long id,
+                                                               @RequestHeader String name, @RequestHeader String password) {
+        return ResponseEntity.ok(userEmployeeService.deleteUserEmployeeById(id, name, password));
     }
 }

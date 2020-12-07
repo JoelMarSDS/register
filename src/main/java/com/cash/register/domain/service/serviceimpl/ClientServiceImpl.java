@@ -5,10 +5,8 @@ import com.cash.register.domain.repository.ClientRepository;
 import com.cash.register.domain.service.ClientService;
 import com.cash.register.domain.settings.config.cpfcnpj.CpfCnpj;
 import com.cash.register.domain.settings.config.messageproperties.PropertiesSourceMessage;
-import com.cash.register.domain.settings.exceptions.ConflictException;
-import com.cash.register.domain.settings.exceptions.UsersNotFoundException;
-import com.cash.register.domain.settings.exceptions.ValidationException;
-import com.cash.register.domain.settings.exceptions.ValidationNotNullException;
+import com.cash.register.domain.settings.config.security.SecurityUsernamePassword;
+import com.cash.register.domain.settings.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,8 +23,13 @@ public class ClientServiceImpl implements ClientService {
     @Autowired
     private ClientRepository clientRepository;
 
+    @Autowired
+    private SecurityUsernamePassword securityUsernamePassword;
+
     @Override
-    public Client addClient(Client client) {
+    public Client addClient(Client client, String name, String password) {
+
+        validationLogin(name, password);
 
         exceptionClient(client);
 
@@ -48,7 +51,10 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Client updateClient(Long id, Client client) {
+    public Client updateClient(Long id, Client client, String name, String password) {
+
+        validationLogin(name, password);
+
         return clientRepository.findById(id)
                 .map(uc -> {
                     exceptionClient(client);
@@ -73,7 +79,10 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Client getClientById(Long id) {
+    public Client getClientById(Long id, String name, String password) {
+
+        validationLogin(name, password);
+
         return clientRepository.findById(id)
                 .orElseThrow(
                         () -> new EntityNotFoundException(PropertiesSourceMessage
@@ -82,7 +91,10 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public List<Client> getClientList() {
+    public List<Client> getClientList(String name, String password) {
+
+        validationLogin(name, password);
+
         var userList = clientRepository.findAll();
         try {
             if (userList.isEmpty()) {
@@ -96,9 +108,12 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public List<Client> getClientFilter(String name, String cpf, String city, String uf) {
+    public List<Client> getClientFilter(String nameParam, String cpf, String city, String uf, String name, String password) {
+
+        validationLogin(name, password);
+
         var listUser = clientRepository.filter(
-                name.toLowerCase(),
+                nameParam.toLowerCase(),
                 cpf.toUpperCase(),
                 city.toLowerCase(),
                 uf.toLowerCase()
@@ -116,7 +131,10 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Client deleteClientById(Long id) {
+    public Client deleteClientById(Long id, String name, String password) {
+
+        validationLogin(name, password);
+
         var userDelete = clientRepository.findById(id)
                 .orElseThrow(
                         () -> new EntityNotFoundException(PropertiesSourceMessage
@@ -151,6 +169,14 @@ public class ClientServiceImpl implements ClientService {
 
         if (CpfCnpj.isValid(client.getCpf())) {
             throw new ValidationException(PropertiesSourceMessage.getMessageSource("msg.client.valid.cpf"));
+        }
+    }
+
+    private void validationLogin(String name, String password) {
+        if (!securityUsernamePassword.namePassword(name, password)) {
+            throw new InvalidUserOrPasswordException(
+                    PropertiesSourceMessage.getMessageSource("invalid.user")
+            );
         }
     }
 }

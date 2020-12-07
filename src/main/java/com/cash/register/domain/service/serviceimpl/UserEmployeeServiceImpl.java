@@ -4,8 +4,10 @@ import com.cash.register.domain.entity.UserEmployee;
 import com.cash.register.domain.repository.UserEmployeeRepository;
 import com.cash.register.domain.service.UserEmployeeService;
 import com.cash.register.domain.settings.config.messageproperties.PropertiesSourceMessage;
+import com.cash.register.domain.settings.config.security.SecurityUsernamePassword;
 import com.cash.register.domain.settings.exceptions.BusinessException;
 import com.cash.register.domain.settings.exceptions.ConflictException;
+import com.cash.register.domain.settings.exceptions.InvalidUserOrPasswordException;
 import com.cash.register.domain.settings.exceptions.UsersNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,8 +25,13 @@ public class UserEmployeeServiceImpl implements UserEmployeeService {
     @Autowired
     private UserEmployeeRepository userEmployeeRepository;
 
+    @Autowired
+    private SecurityUsernamePassword securityUsernamePassword;
+
     @Override
-    public UserEmployee addUserEmployee(UserEmployee userEmployee) {
+    public UserEmployee addUserEmployee(UserEmployee userEmployee, String name, String password) {
+
+        validationLogin(name, password);
 
         exceptionUserEmployee(userEmployee);
 
@@ -42,7 +49,10 @@ public class UserEmployeeServiceImpl implements UserEmployeeService {
     }
 
     @Override
-    public UserEmployee updateUserEmployee(Long id, UserEmployee userEmployee) {
+    public UserEmployee updateUserEmployee(Long id, UserEmployee userEmployee, String name, String password) {
+
+        validationLogin(name, password);
+
         return userEmployeeRepository.findById(id)
                 .map(us -> {
 
@@ -72,7 +82,10 @@ public class UserEmployeeServiceImpl implements UserEmployeeService {
     }
 
     @Override
-    public UserEmployee getUserEmployeeById(Long id) {
+    public UserEmployee getUserEmployeeById(Long id, String name, String password) {
+
+        validationLogin(name, password);
+
         return userEmployeeRepository.findById(id)
                 .orElseThrow(
                         () -> new EntityNotFoundException(PropertiesSourceMessage
@@ -81,9 +94,12 @@ public class UserEmployeeServiceImpl implements UserEmployeeService {
     }
 
     @Override
-    public List<UserEmployee> getUserEmployeeList() {
+    public List<UserEmployee> getUserEmployeeList(String name, String password) {
+
+        validationLogin(name, password);
 
         var userEmployeeList = userEmployeeRepository.findAll();
+
         try {
             if (userEmployeeList.isEmpty()) {
                 throw new UsersNotFoundException(PropertiesSourceMessage
@@ -96,8 +112,11 @@ public class UserEmployeeServiceImpl implements UserEmployeeService {
     }
 
     @Override
-    public List<UserEmployee> getUserEmployeeFilter(String name, String email) {
-        var listUserEmployee = userEmployeeRepository.filter(name.toLowerCase(), email.toLowerCase());
+    public List<UserEmployee> getUserEmployeeFilter(String nameParam, String email, String name, String password) {
+
+        validationLogin(nameParam, password);
+
+        var listUserEmployee = userEmployeeRepository.findFilter(nameParam, email);
         try {
             if (listUserEmployee.isEmpty()) {
                 throw new UsersNotFoundException(PropertiesSourceMessage
@@ -112,12 +131,18 @@ public class UserEmployeeServiceImpl implements UserEmployeeService {
 
 
     @Override
-    public UserEmployee deleteUserEmployeeById(Long id) {
-        var userEmployeeDelete = getUserEmployeeById(id);
+    public UserEmployee deleteUserEmployeeById(Long id, String name, String password) {
+
+        validationLogin(name, password);
+
+        var userEmployeeDelete = userEmployeeRepository.findById(id)
+                .orElseThrow(
+                        () -> new EntityNotFoundException(PropertiesSourceMessage
+                        .getMessageSource("msg.user.not.found.error"))
+                );
         userEmployeeRepository.deleteById(userEmployeeDelete.getId());
         return userEmployeeDelete;
     }
-
 
     private void exceptionUserEmployee(UserEmployee userEmployee) {
 
@@ -143,6 +168,14 @@ public class UserEmployeeServiceImpl implements UserEmployeeService {
         character.toLowerCase();
         if (!character.equalsIgnoreCase("A") && !character.equalsIgnoreCase("C")) {
             throw new BusinessException(PropertiesSourceMessage.getMessageSource("msg.properties.status.error"));
+        }
+    }
+
+    private void validationLogin(String name, String password) {
+        if (!securityUsernamePassword.namePassword(name, password)) {
+            throw new InvalidUserOrPasswordException(
+                    PropertiesSourceMessage.getMessageSource("invalid.user")
+            );
         }
     }
 }

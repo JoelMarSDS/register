@@ -11,11 +11,8 @@ import java.util.List;
 @Repository
 public interface UserEmployeeRepository extends JpaRepository<UserEmployee, Long> {
 
-    @Query("from User u " +
-            "where lower(u.name) like %:nameUserEmployee% " +
-            "or lower(u.email) like %:emailUserEmployee%")
-    List<UserEmployee> filter(@Param("nameUserEmployee") String nameUserEmployee,
-                              @Param("emailUserEmployee") String emailUserEmployee);
+    @Query("from UserEmployee u where lower(u.name) like %:nameUser% or lower(u.email) like %:emailUser%")
+    List<UserEmployee> findFilter(@Param("nameUser") String nameUser, @Param("emailUser") String emailUser);
 
     UserEmployee findByLogin(String login);
 

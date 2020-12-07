@@ -6,15 +6,15 @@ import java.util.List;
 
 public interface UserEmployeeService {
 
-    UserEmployee addUserEmployee(UserEmployee userEmployee);
+    UserEmployee addUserEmployee(UserEmployee userEmployee, String name, String password);
 
-    UserEmployee updateUserEmployee(Long id, UserEmployee userEmployee);
+    UserEmployee updateUserEmployee(Long id, UserEmployee userEmployee, String name, String password);
 
-    UserEmployee getUserEmployeeById(Long id);
+    UserEmployee getUserEmployeeById(Long id, String name, String password);
 
-    List<UserEmployee> getUserEmployeeList();
+    List<UserEmployee> getUserEmployeeList(String name, String password);
 
-    List<UserEmployee> getUserEmployeeFilter(String name, String email);
+    List<UserEmployee> getUserEmployeeFilter(String nameParam, String email, String name, String password);
 
-    UserEmployee deleteUserEmployeeById(Long id);
+    UserEmployee deleteUserEmployeeById(Long id, String name, String password);
 }

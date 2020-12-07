@@ -6,7 +6,6 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Employee")
 public class UserEmployee {
 
     @Id
@@ -23,7 +22,7 @@ public class UserEmployee {
     @Column(unique = true, length = 15)
     private String login;
 
-    @Column(length = 15)
+    @Column
     private String password;
 
     @Column(length = 11)

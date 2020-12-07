@@ -17,40 +17,42 @@ public class ClientController {
     private ClientService clientService;
 
     @PostMapping
-    public ResponseEntity<Client> addUser(@RequestBody Client client) {
-        var clientSave = clientService.addClient(client);
+    public ResponseEntity<Client> addUser(@RequestBody Client client, @RequestHeader String name, @RequestHeader String password) {
+        var clientSave = clientService.addClient(client, name, password);
         URI uri = URI.create("/user/" + clientSave.getId());
         return ResponseEntity.created(uri).body(clientSave);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Client> updateUser(@PathVariable Long id, @RequestBody Client user) {
-        var updateClient = clientService.updateClient(id, user);
+    public ResponseEntity<Client> updateUser(@PathVariable Long id, @RequestBody Client user, @RequestHeader String name, @RequestHeader String password) {
+        var updateClient = clientService.updateClient(id, user, name, password);
         return ResponseEntity.ok(updateClient);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Client> getUserById(@PathVariable Long id) {
-        return ResponseEntity.ok(clientService.getClientById(id));
+    public ResponseEntity<Client> getUserById(@PathVariable Long id, @RequestHeader String name, @RequestHeader String password) {
+        return ResponseEntity.ok(clientService.getClientById(id, name, password));
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<Client>> getUserList() {
-        return ResponseEntity.ok(clientService.getClientList());
+    public ResponseEntity<List<Client>> getUserList(@RequestHeader String name, @RequestHeader String password) {
+        return ResponseEntity.ok(clientService.getClientList(name, password));
     }
 
     @GetMapping("/filter")
     public ResponseEntity<List<Client>> getUserFilter(
-            @RequestParam String name,
+            @RequestParam String nameParam,
             @RequestParam String cpf,
             @RequestParam String city,
-            @RequestParam String uf
+            @RequestParam String uf,
+            @RequestHeader String name,
+            @RequestHeader String password
     ) {
-        return ResponseEntity.ok(clientService.getClientFilter(name, cpf, city, uf));
+        return ResponseEntity.ok(clientService.getClientFilter(nameParam, cpf, city, uf, name, password));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Client> deleteUserById(@PathVariable Long id) {
-        return ResponseEntity.ok(clientService.deleteClientById(id));
+    public ResponseEntity<Client> deleteUserById(@PathVariable Long id, @RequestHeader String name, @RequestHeader String password) {
+        return ResponseEntity.ok(clientService.deleteClientById(id, name, password));
     }
 }

@@ -6,15 +6,15 @@ import java.util.List;
 
 public interface CashBookService {
 
-    CashBook addCashBook(CashBook cashBook);
+    CashBook addCashBook(CashBook cashBook, String name, String password);
 
-    CashBook updateCashBook(Long id, CashBook cashBook);
+    CashBook updateCashBook(Long id, CashBook cashBook, String name, String password);
 
-    CashBook getCashBookById(Long id);
+    CashBook getCashBookById(Long id, String name, String password);
 
-    List<CashBook> getCashBookList();
+    List<CashBook> getCashBookList(String name, String password);
 
-    List<CashBook> getCashBookFilter(Long id);
+    List<CashBook> getCashBookFilter(Long id, String name, String password);
 
-    CashBook deleteCashBookById(Long id);
+    CashBook deleteCashBookById(Long id, String name, String password);
 }
